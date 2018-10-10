@@ -25,20 +25,20 @@ public class Circle extends Shape {
 
  public void move(boolean r, boolean l, boolean u, boolean d, Background bg) {
    if(u && y>0)
-     y -= 1;
+     y -= 3;
    if(d && y+height<700)
-     y += 1;
+     y += 3;
    if(r) {
       if(x<480 || (bg.getX()<=-1080 && x+width<1080))
-        x += 1;
+        x += 3;
       else
-        bg.setX(-1);
+        bg.setX(-3);
    }
    if(l) {
       if(x>480 || (bg.getX()>=0 && x>0))
-        x -= 1;
+        x -= 3;
       else
-        bg.setX(1);
+        bg.setX(3);
    }
  }
 

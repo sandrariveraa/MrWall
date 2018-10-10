@@ -6,19 +6,9 @@
  */
 
 
-import java.awt.*;
-import java.awt.image.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.*;
-import javax.imageio.ImageIO;
-import java.lang.*;
-import javax.swing.*;
-import java.util.*;
-import javax.swing.*;
+ import javax.swing.*;
+ import java.awt.event.*;
+ import java.awt.*;
 
 
 public class GamePanel extends JPanel implements Runnable {
@@ -83,7 +73,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 		//we create our objects here
 		circ = new Circle(0,600, 70, 70, Color.CYAN);
-		background1 = new Background(0,0,"img/bg1.png");
+		background1 = new Background(0,0,"bg1.png");
 
 	} //End of GamePanel()
 
@@ -121,26 +111,16 @@ public class GamePanel extends JPanel implements Runnable {
     to be carried out so UPS ~== requested FPS
 	*/
 		long beforeTime, afterTime, timeDiff, sleepTime;
-		int period = 1000/10; //period = 1000/desiredFPS
 		long overSleepTime = 0L;
 		int noDelays = 0;
 		long excess = 0L;
+    long period = 1000000000/85; //period = 1s/desiredFPS  usamos 1x10^9 porque usamos nano segundos
 
 		beforeTime = java.lang.System.nanoTime();
 
 		running = true;
 		while(running) {
-			try {
-        if (isPaused) {
-          synchronized(this) {
-            while (isPaused && running)
-							wait(); }
-        }
-      } // of try block
-      catch (InterruptedException e){}
-
 			gameUpdate(); // game state is updated
-
 			gameRender(); // render to buffer
 			paintScreen(); // paint with the buffer
 
@@ -168,7 +148,9 @@ public class GamePanel extends JPanel implements Runnable {
 			/* If frame animation is taking too long, update the game state
 			   without rendering it, to get the updates/sec nearer to
 			   the required FPS. */
-			int skips = 0;
+         int cores = Runtime.getRuntime().availableProcessors();
+         System.out.println(cores);
+      int skips = 0;
 			while((excess > period) && (skips < MAX_FRAME_SKIPS)) {
 		      excess -= period;
 		      gameUpdate();
