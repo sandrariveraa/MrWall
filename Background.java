@@ -8,8 +8,6 @@
  */
 
 
-package test;
-
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -18,47 +16,46 @@ import java.io.*;
 
 
 public class Background {
-	
- //private int addX = 10;
- //private int addY = 10;
- private int x;
- private int y;
- private ImageLoader background_loader;
- private int width = 1080;
- private int height= 720;
- 
- public Background(int x, int y, String path) {
-	 this.x=x;
-	 this.y=y;
-	 this.background_loader = new ImageLoader(path);
- }
- 
- public void move() {
-	 
- }
- 
- public void setX(int n) {
-	 int aux= this.x+n;
-	 if((aux<=0) && (aux>=-1080))
-	 this.x += n;
- }
- 
- public void setY(int n) {
-	 this.y += n;
- }
- 
- public int getX() {
-	 return x;
- }
- 
- public int getY() {
-	 return y;
- }
- 
- public Image draw(Graphics g) {
-	 return background_loader.load();
- }
- 
-}
-	
+  private static final int PWIDTH = 1080; // largo del panel
+	private static final int PHEIGHT = 720; // alto del panel
+  private int x;
+  private int y;
+  private String path;
+  private BufferedImage img;
 
+   public Background(int x, int y, String path) {
+  	 this.x=x;
+  	 this.y=y;
+  	 this.path = path;
+
+  	 File srcFile = new File(path);
+  	 try {
+  		 img = ImageIO.read(srcFile);
+  	 } catch (IOException e) {
+  		 e.printStackTrace();
+  	 }
+   }
+
+  public void setX(int n) {
+  	 int aux= this.x+n;
+  	 if((aux<=0) && (aux>=-1080))
+  	   this.x += n;
+   }
+
+   public void setY(int n) {
+  	 this.y += n;
+   }
+
+   public int getX() {
+  	 return x;
+   }
+
+   public int getY() {
+  	 return y;
+   }
+
+   public void draw(Graphics g) {
+  	 g.drawImage(img, x, y, null);
+   }
+
+}
