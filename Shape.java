@@ -4,6 +4,7 @@
  * Esta clase es la clase padre de la cual se heredan las figuras.
  */
 
+package test2book;
 
 import java.awt.*;
 

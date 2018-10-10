@@ -5,6 +5,7 @@
  * un ciclo de animación que utiliza Update() Render() Sleep()
  */
 
+package test2book;
 
  import javax.swing.*;
  import java.awt.event.*;
@@ -35,6 +36,8 @@ public class GamePanel extends JPanel implements Runnable {
 	//Our objects
 	private Circle circ;
 	private Background background1;
+	private Background foreground1;
+	private Background middleground1;
 
 	//Direction variables
 	private boolean right = false;
@@ -73,7 +76,10 @@ public class GamePanel extends JPanel implements Runnable {
 
 		//we create our objects here
 		circ = new Circle(0,600, 70, 70, Color.CYAN);
-		background1 = new Background(0,0,"img/bg1.png");
+		foreground1 = new Background(0,0,"img/foreground1.png");
+		middleground1 = new Background(0,0,"img/middleground1.png");
+		background1 = new Background(0,0,"img/background1.png");
+
 
 	} //End of GamePanel()
 
@@ -111,17 +117,29 @@ public class GamePanel extends JPanel implements Runnable {
     to be carried out so UPS ~== requested FPS
 	*/
 		long beforeTime, afterTime, timeDiff, sleepTime;
+		long period = 1000000000/85; //period = 1000/desiredFPS
 		long overSleepTime = 0L;
 		int noDelays = 0;
 		long excess = 0L;
-    long period = 1000000000/85; //period = 1s/desiredFPS  usamos 1x10^9 porque usamos nano segundos
 
 		beforeTime = java.lang.System.nanoTime();
 
 		running = true;
 		while(running) {
+			try {
+        if (isPaused) {
+          synchronized(this) {
+            while (isPaused && running)
+							wait(); }
+        }
+      } // of try block
+      catch (InterruptedException e){}
+
 			gameUpdate(); // game state is updated
+
 			gameRender(); // render to buffer
+
+			paintScreen(); // paint with the buffer
 			paintScreen(); // paint with the buffer
 
 			afterTime = java.lang.System.nanoTime();
@@ -148,10 +166,10 @@ public class GamePanel extends JPanel implements Runnable {
 			/* If frame animation is taking too long, update the game state
 			   without rendering it, to get the updates/sec nearer to
 			   the required FPS. */
-         int cores = Runtime.getRuntime().availableProcessors();
-         System.out.println(cores);
-      int skips = 0;
-			while((excess > period) && (skips < MAX_FRAME_SKIPS)) {
+			int skips = 0;
+			int cores=Runtime.getRuntime().availableProcessors();
+			System.out.println(cores);
+			while((excess > period) && (skips <= MAX_FRAME_SKIPS)) {
 		      excess -= period;
 		      gameUpdate();
 		      skips++;
@@ -164,7 +182,7 @@ public class GamePanel extends JPanel implements Runnable {
 	private void gameUpdate() {
 		if(!gameOver) { // if game is not over
 
-			circ.move(right, left, up, down, background1);
+			circ.move(right, left, up, down, background1, middleground1, foreground1);
 
 		}
 	}
@@ -186,6 +204,8 @@ public class GamePanel extends JPanel implements Runnable {
     dbg.fillRect (0, 0, PWIDTH, PHEIGHT);
     // draw game elements
 		background1.draw(dbg);
+		middleground1.draw(dbg);
+		foreground1.draw(dbg);
 		circ.draw(dbg);
 
     if (gameOver)

@@ -7,6 +7,7 @@
  * en el GamePanel
  */
 
+package test2book;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -16,8 +17,7 @@ import java.io.*;
 
 
 public class Background {
-  private static final int PWIDTH = 1080; // largo del panel
-	private static final int PHEIGHT = 720; // alto del panel
+
   private int x;
   private int y;
   private String path;
@@ -38,7 +38,7 @@ public class Background {
 
   public void setX(int n) {
   	 int aux= this.x+n;
-  	 if((aux<=0) && (aux>=-1080))
+  	if((aux<=0) && (aux>=-3240))
   	   this.x += n;
    }
 
